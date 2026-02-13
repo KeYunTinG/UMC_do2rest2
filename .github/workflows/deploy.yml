@@ -30,13 +30,13 @@ jobs:
       - name: Build Angular
         run: npx ng build --configuration production --base-href /UMC_do2rest2/
 
-      # 修正 3：複製 404.html (來源路徑要用 Angular 專案名稱 umcdo2rest2)
+      # 修正 3：複製 404.html (來源路徑要用 Angular 專案名稱 UMCDo2rest2)
       - name: Copy index.html to 404.html
-        run: cp dist/umcdo2rest2/browser/index.html dist/umcdo2rest2/browser/404.html
+        run: cp dist/UMCDo2rest2/browser/index.html dist/UMCDo2rest2/browser/404.html
 
-      # 修正 4：部署 (來源資料夾要用 Angular 專案名稱 umcdo2rest2)
+      # 修正 4：部署 (來源資料夾要用 Angular 專案名稱 UMCDo2rest2)
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: dist/umcdo2rest2/browser
+          folder: dist/UMCDo2rest2/browser
           branch: gh-pages
