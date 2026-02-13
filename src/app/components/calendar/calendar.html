@@ -1,0 +1,63 @@
+<div class="p-4 max-w-6xl mx-auto font-sans text-slate-700">
+
+  <div class="flex flex-col sm:flex-row items-center justify-between mb-6 gap-4">
+    <h2 class="text-2xl font-bold text-slate-800">
+      {{ currentDate | date:'yyyy年 MM月' }}
+    </h2>
+    <div class="flex gap-2">
+      <button (click)="prevMonth()"
+        class="px-4 py-2 bg-white border border-slate-300 rounded hover:bg-slate-50 transition">
+        <span class="hidden sm:inline">上個月</span><span class="sm:hidden">&lt;</span>
+      </button>
+      <button (click)="nextMonth()"
+        class="px-4 py-2 bg-white border border-slate-300 rounded hover:bg-slate-50 transition">
+        <span class="hidden sm:inline">下個月</span><span class="sm:hidden">&gt;</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+    <div class="grid grid-cols-7 border-b border-slate-200 bg-slate-50">
+      @for (day of weekDays; track day; let i = $index) {
+      <div class="py-3 text-center font-bold text-sm" [ngClass]="{'text-red-500': i === 0 || i === 6}">
+        {{ day }}
+      </div>
+      }
+    </div>
+
+    <div class="grid grid-cols-7 auto-rows-fr">
+      @for (day of days(); track $index) {
+      <div
+        class="min-h-[100px] sm:min-h-[120px] border-b border-r border-slate-100 p-1 sm:p-2 relative group hover:bg-slate-50 transition"
+        [ngClass]="{'bg-slate-50/50': !day.isCurrentMonth}">
+        <div class="flex flex-col sm:flex-row justify-between items-start mb-1">
+          <span class="text-sm font-medium w-6 h-6 flex items-center justify-center rounded-full transition-colors"
+            [ngClass]="{
+              'bg-blue-600 text-white': day.isToday,
+              'text-slate-300': !day.isCurrentMonth,
+              'text-red-500 font-bold': day.isCurrentMonth && !day.isToday && (day.date.getDay() === 0 || day.date.getDay() === 6 || day.holiday),
+              'text-slate-700': day.isCurrentMonth && !day.isToday && !(day.date.getDay() === 0 || day.date.getDay() === 6 || day.holiday)
+              }">
+            {{ day.date | date:'d' }}
+          </span>
+
+          @if(day.holiday){
+          <span class="text-[10px] sm:text-xs font-bold text-red-500 bg-red-50 px-1 rounded mt-1 sm:mt-0">
+            {{ day.holiday }}
+          </span>
+          }
+        </div>
+
+        <div class="flex flex-col gap-1 mt-1">
+          @for (shift of day.shifts; track $index) {
+          <div class="text-[10px] sm:text-xs px-1 py-0.5 sm:px-2 sm:py-1 rounded border truncate" [class]="shift.color">
+            {{ shift.title }}
+          </div>
+          }
+        </div>
+
+      </div>
+      }
+    </div>
+  </div>
+</div>

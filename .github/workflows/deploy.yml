@@ -1,0 +1,36 @@
+name: Build and Deploy Angular
+
+on:
+  push:
+    branches:
+      - main # 當 main 分支有更新時觸發
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/node@v4
+        with:
+          node-version: "20" # 根據你的 Angular 版本調整
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Angular
+        # 請將 <repository-name> 替換成你的專案名稱
+        run: npx ng build --configuration production --base-href /<repository-name>/
+
+      - name: Copy index.html to 404.html
+        # 解決 GitHub Pages 重新整理時的 404 問題
+        run: cp dist/<project-name>/browser/index.html dist/<project-name>/browser/404.html
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist/<project-name>/browser # Angular 17+ 預設編譯路徑
+          branch: gh-pages # 佈署到的目標分支
