@@ -23,14 +23,14 @@ jobs:
 
       - name: Build Angular
         # 請將 <repository-name> 替換成你的專案名稱
-        run: npx ng build --configuration production --base-href /<repository-name>/
+        run: npx ng build --configuration production --base-href /UMC_do2rest2/
 
       - name: Copy index.html to 404.html
         # 解決 GitHub Pages 重新整理時的 404 問題
-        run: cp dist/<project-name>/browser/index.html dist/<project-name>/browser/404.html
+        run: cp dist/UMC_do2rest2/browser/index.html dist/UMC_do2rest2/browser/404.html
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: dist/<project-name>/browser # Angular 17+ 預設編譯路徑
+          folder: dist/UMC_do2rest2/browser # Angular 17+ 預設編譯路徑
           branch: gh-pages # 佈署到的目標分支
