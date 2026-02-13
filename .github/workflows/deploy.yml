@@ -3,7 +3,10 @@ name: Build and Deploy Angular
 on:
   push:
     branches:
-      - main # 當 main 分支有更新時觸發
+      - main # 或是 master，請確認你的主分支名稱
+
+permissions:
+  contents: write
 
 jobs:
   build-and-deploy:
@@ -13,24 +16,27 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # 修正 1：使用正確的 setup-node
       - name: Setup Node.js
-        uses: actions/node@v4
+        uses: actions/setup-node@v4
         with:
-          node-version: "20" # 根據你的 Angular 版本調整
+          node-version: "20"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
 
+      # 修正 2：Base-href 必須對應 GitHub Repo 名稱 (UMC_do2rest2)
       - name: Build Angular
-        # 請將 <repository-name> 替換成你的專案名稱
         run: npx ng build --configuration production --base-href /UMC_do2rest2/
 
+      # 修正 3：複製 404.html (來源路徑要用 Angular 專案名稱 umcdo2rest2)
       - name: Copy index.html to 404.html
-        # 解決 GitHub Pages 重新整理時的 404 問題
-        run: cp dist/UMC_do2rest2/browser/index.html dist/UMC_do2rest2/browser/404.html
+        run: cp dist/umcdo2rest2/browser/index.html dist/umcdo2rest2/browser/404.html
 
+      # 修正 4：部署 (來源資料夾要用 Angular 專案名稱 umcdo2rest2)
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: dist/UMC_do2rest2/browser # Angular 17+ 預設編譯路徑
-          branch: gh-pages # 佈署到的目標分支
+          folder: dist/umcdo2rest2/browser
+          branch: gh-pages
