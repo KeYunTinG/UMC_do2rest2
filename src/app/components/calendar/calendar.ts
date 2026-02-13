@@ -46,7 +46,6 @@ export class Calendar implements OnInit {
   loadData(): void {
     forkJoin({
       holidays: this.http.get<Holiday[]>('./assets/holidays.json'),
-      shifts: this.http.get<Record<string, Shift[]>>('./assets/shifts.json'),
     }).subscribe({
       next: (response) => {
         this.holidaysData = response.holidays;
