@@ -8,6 +8,9 @@ export interface Holiday {
   date: string;
   name: string;
 }
+export interface Overtime {
+  date: string;
+}
 
 export interface CalendarDay {
   date: Date;
