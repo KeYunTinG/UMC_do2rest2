@@ -48,13 +48,49 @@ export class Calendar implements OnInit {
       holidays: this.http.get<Holiday[]>('./assets/holidays.json'),
     }).subscribe({
       next: (response) => {
-        this.holidaysData = response.holidays;
+        // 處理補假邏輯
+        this.holidaysData = this.processAdjustedHolidays(response.holidays);
       },
       error: (err) => console.error('無法讀取資料:', err),
       complete: () => {
         this.generateCalendar();
       },
     });
+  }
+
+  //補假
+  private processAdjustedHolidays(holidays: Holiday[]): Holiday[] {
+    const adjustedHolidays: Holiday[] = [];
+
+    holidays.forEach((h) => {
+      const date = new Date(h.date);
+      const dayOfWeek = date.getDay(); // 0 是週日, 6 是週六
+
+      if (dayOfWeek === 6) {
+        // 週六：補禮拜五
+        const friday = new Date(date);
+        friday.setDate(date.getDate() - 1);
+        adjustedHolidays.push({
+          ...h,
+          date: friday.toISOString().split('T')[0],
+          name: `${h.name} (補假)`,
+        });
+      } else if (dayOfWeek === 0) {
+        // 週日：補禮拜一
+        const monday = new Date(date);
+        monday.setDate(date.getDate() + 1);
+        adjustedHolidays.push({
+          ...h,
+          date: monday.toISOString().split('T')[0],
+          name: `${h.name} (補假)`,
+        });
+      }
+
+      // 原本的假日還是要放（或視需求決定是否保留）
+      adjustedHolidays.push(h);
+    });
+
+    return adjustedHolidays;
   }
 
   //* 計算休假日
