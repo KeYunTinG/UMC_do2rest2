@@ -75,7 +75,7 @@ export class Calendar implements OnInit {
 
       //* 過年不補假
       if (dayOfWeek === 6 && !chineseNewYear.includes(h.name)) {
-        // 週六：補禮拜五
+        //* 週六：補禮拜五
         const friday = new Date(date);
         friday.setDate(date.getDate() - 1);
         adjustedHolidays.push({
@@ -84,7 +84,7 @@ export class Calendar implements OnInit {
           name: `${h.name} (補假)`,
         });
       } else if (dayOfWeek === 0 && !chineseNewYear.includes(h.name)) {
-        // 週日：補禮拜一
+        //* 週日：補禮拜一
         const monday = new Date(date);
         monday.setDate(date.getDate() + 1);
         adjustedHolidays.push({
